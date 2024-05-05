@@ -35,6 +35,8 @@
 #error This file is not for android.
 #endif
 
+#include <random>
+
 #include "tools.h"
 #include <core/loghelper.h>
 #include <core/openssl_wrapper.h>
@@ -47,37 +49,36 @@
 
 using namespace std;
 
-boost::thread_specific_ptr<boost::random_device> g_rand_state;
+boost::thread_specific_ptr<random_device> g_rand_state;
 
 struct nondet_rng : std::unary_function<unsigned, unsigned> {
-	boost::random_device &_state;
+	random_device &_state;
 	unsigned operator()(unsigned i)
 	{
 		boost::uniform_int<> rng(0, i - 1);
 		return rng(_state);
 	}
-	nondet_rng(boost::random_device &state) : _state(state) {}
+	nondet_rng(random_device &state) : _state(state) {}
 };
 
 static inline void InitRandState()
 {
 	if (!g_rand_state.get()) {
-		g_rand_state.reset(new boost::random_device);
+		g_rand_state.reset(new random_device);
 	}
 }
 
 void Tools::ShuffleArrayNonDeterministic(int *inout, unsigned count)
 {
 	InitRandState();
-	nondet_rng rand(*g_rand_state);
-	random_shuffle(&inout[0], &inout[count], rand);
+	std::shuffle(&inout[0], &inout[count], *g_rand_state);
 }
 
 void Tools::GetRand(int minValue, int maxValue, unsigned count, int *out)
 {
 	InitRandState();
 	boost::uniform_int<> dist(minValue, maxValue);
-	boost::variate_generator<boost::random_device&, boost::uniform_int<> > gen(*g_rand_state, dist);
+	boost::variate_generator<random_device&, boost::uniform_int<> > gen(*g_rand_state, dist);
 	int *startPtr = out;
 	for (unsigned i = 0; i < count; i++) {
 		*startPtr++ = gen();

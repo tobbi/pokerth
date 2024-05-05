@@ -31,6 +31,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <random>
 #include <algorithm>
 
 #include <net/servergame.h>
@@ -309,7 +310,9 @@ ServerGame::InternalStartGame()
 		// Note: This does not use a cryptographically strong
 		// random number generator.
 		vector<boost::shared_ptr<PlayerData> > tmpData(playerData.begin(), playerData.end());
-		random_shuffle(tmpData.begin(), tmpData.end());
+		std::random_device rd;
+    	std::mt19937 g(rd());
+		std::shuffle(tmpData.begin(), tmpData.end(), g);
 		copy(tmpData.begin(), tmpData.end(), playerData.begin());
 
 		// Set order of players.
