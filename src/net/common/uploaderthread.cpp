@@ -94,7 +94,7 @@ UploaderThread::Main()
 						url += filepath.filename().string();
 #endif
 					}
-					m_uploadHelper->Init(url, filepath.file_string(), data.user, data.pwd, data.filesize, data.httpPost);
+					m_uploadHelper->Init(url, filepath.string(), data.user, data.pwd, data.filesize, data.httpPost);
 					m_uploadInProgress = true;
 				}
 			}

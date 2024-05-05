@@ -73,7 +73,7 @@ public:
 
 	std::string getMySqliteLogFileName()
 	{
-		return mySqliteLogFileName.directory_string();
+		return mySqliteLogFileName.string();
 	}
 
 private:

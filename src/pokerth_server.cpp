@@ -158,7 +158,7 @@ main(int argc, char *argv[])
 	if (pidFile.empty()) {
 		path tmpPidPath(myConfig->readConfigString("LogDir"));
 		tmpPidPath /= "pokerth.pid";
-		pidFile = tmpPidPath.directory_string();
+		pidFile = tmpPidPath.string();
 	}
 	{
 		std::ofstream pidStream(pidFile.c_str(), ios_base::out | ios_base::trunc);

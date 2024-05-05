@@ -87,20 +87,20 @@ AvatarManager::Init(const string &dataDir, const string &cacheDir)
 	path tmpDataPath(dataDir);
 	{
 		boost::mutex::scoped_lock lock(m_cacheDirMutex);
-		m_cacheDir = tmpCachePath.directory_string();
+		m_cacheDir = tmpCachePath.string();
 	}
 	{
 		boost::mutex::scoped_lock lock(m_avatarsMutex);
-		tmpRet = InternalReadDirectory((tmpDataPath / "gfx/avatars/default/people/").directory_string(), m_avatars);
+		tmpRet = InternalReadDirectory((tmpDataPath / "gfx/avatars/default/people/").string(), m_avatars);
 		retVal = retVal && tmpRet;
-		tmpRet = InternalReadDirectory((tmpDataPath / "gfx/avatars/default/misc/").directory_string(), m_avatars);
+		tmpRet = InternalReadDirectory((tmpDataPath / "gfx/avatars/default/misc/").string(), m_avatars);
 		retVal = retVal && tmpRet;
 	}
 	if (cacheDir.empty() || tmpCachePath.empty())
 		LOG_ERROR("Cache directory was not set!");
 	else {
 		boost::mutex::scoped_lock lock(m_cachedAvatarsMutex);
-		tmpRet = InternalReadDirectory(tmpCachePath.directory_string(), m_cachedAvatars);
+		tmpRet = InternalReadDirectory(tmpCachePath.string(), m_cachedAvatars);
 		retVal = retVal && tmpRet;
 	}
 
@@ -113,7 +113,7 @@ AvatarManager::AddSingleAvatar(const std::string &fileName)
 {
 	bool retVal = false;
 	path filePath(fileName);
-	string tmpFileName(filePath.file_string());
+	string tmpFileName(filePath.string());
 
 	if (!fileName.empty() && !tmpFileName.empty()) {
 		unsigned outFileSize = 0;
@@ -240,7 +240,7 @@ AvatarManager::GetAvatarFileType(const string &fileName)
 	AvatarFileType fileType;
 
 	path filePath(fileName);
-	string ext(extension(filePath));
+	string ext(filePath.extension().string());
 	if (boost::algorithm::iequals(ext, ".png"))
 		fileType = AVATAR_FILE_TYPE_PNG;
 	else if (boost::algorithm::iequals(ext, ".jpg") || boost::algorithm::iequals(ext, ".jpeg"))
@@ -362,7 +362,7 @@ AvatarManager::StoreAvatarInCache(const MD5Buf &md5buf, AvatarFileType avatarFil
 			if (IsValidAvatarFileType(avatarFileType, data, size)) {
 				path tmpPath(cacheDir);
 				tmpPath /= (md5buf.ToString() + ext);
-				string fileName(tmpPath.file_string());
+				string fileName(tmpPath.string());
 				std::ofstream o(fileName.c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
 				if (!o.fail()) {
 					o.write((const char *)data, size);
@@ -426,7 +426,7 @@ AvatarManager::RemoveOldAvatarCacheEntries()
 	}
 	try {
 		path cachePath(cacheDir);
-		cacheDir = cachePath.directory_string();
+		cacheDir = cachePath.string();
 		// Never delete anything if we do not have a special cache dir set.
 		if (!cacheDir.empty()) {
 			boost::mutex::scoped_lock lock(m_cachedAvatarsMutex);
@@ -441,12 +441,12 @@ AvatarManager::RemoveOldAvatarCacheEntries()
 				while (i != end) {
 					bool keepFile = false;
 					path filePath(i->second);
-					string fileString(filePath.file_string());
+					string fileString(filePath.string());
 					// Only consider files which are definitely in the cache dir.
 					if (fileString.size() > cacheDir.size() && fileString.substr(0, cacheDir.size()) == cacheDir) {
 						// Only consider files with MD5 as file name.
 						MD5Buf tmpBuf;
-						if (exists(filePath) && tmpBuf.FromString(basename(filePath))) {
+						if (exists(filePath) && tmpBuf.FromString(filePath.stem().string())) {
 							timeMap.insert(TimeAvatarMap::value_type(last_write_time(filePath), i->first));
 							keepFile = true;
 						}
@@ -520,10 +520,10 @@ AvatarManager::InternalReadDirectory(const std::string &dir, AvatarMap &avatars)
 			directory_iterator end;
 
 			while (i != end) {
-				if (is_regular(i->status())) {
-					string md5sum(basename(i->path()));
+				if (is_regular_file(i->status())) {
+					string md5sum(i->path().stem().string());
 					MD5Buf md5buf;
-					string fileName(i->path().file_string());
+					string fileName(i->path().string());
 					if (md5buf.FromString(md5sum)) {
 						// Only consider files with md5sum as name.
 						avatars.insert(AvatarMap::value_type(md5buf, fileName));

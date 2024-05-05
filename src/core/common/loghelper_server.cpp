@@ -59,7 +59,7 @@ loghelper_init(const string &logDir, int logLevel)
 	path tmpLogFile(logDir);
 	tmpLogFile /= SERVER_MSG_LOG_FILE_NAME;
 
-	g_logFile = tmpLogFile.directory_string();
+	g_logFile = tmpLogFile.string();
 	g_logLevel = logLevel;
 }
 

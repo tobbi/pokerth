@@ -84,7 +84,7 @@ Log::init()
 				mySqliteLogFileName /= string("pokerth-log-") + curDateTime + ".pdb";
 
 				// open sqlite-db
-				sqlite3_open(mySqliteLogFileName.directory_string().c_str(), &mySqliteLogDb);
+				sqlite3_open(mySqliteLogFileName.string().c_str(), &mySqliteLogDb);
 				if( mySqliteLogDb != 0 ) {
 
 					int i;
