@@ -20,3 +20,5 @@ gitpush_serverstuff_stable
 .vscode/
 .project
 .classpath
+docs/linux_build_scripts/
+.DS_Store
