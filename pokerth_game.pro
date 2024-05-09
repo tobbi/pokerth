@@ -576,15 +576,16 @@ mac {
 	CONFIG += x86_64
 	CONFIG -= x86
 	CONFIG -= ppc
-	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
+	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
 	QMAKE_CXXFLAGS -= -std=gnu++0x
+	QMAKE_CXXFLAGS += -std=c++17
 
 	# workaround for problems with boost_filesystem exceptions
 	QMAKE_LFLAGS += -no_dead_strip_inits_and_terms
 
 	# for universal-compilation on PPC-Mac uncomment the following line
 	# on Intel-Mac you have to comment this line out or build will fail.
-	# QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk/
+	# QMAKE_MAC_SDK=/Library/Developer/CommandLineTools/SDKs/MacOSX10.4u.sdk/
 	LIBPATH += lib
 
 	# QT dynamic linked framework (see also mac_post_make.sh)
@@ -629,7 +630,7 @@ mac {
     INCLUDEPATH += /usr/local/opt/tinyxml/include
     INCLUDEPATH += /usr/local/opt/protobuf/include
     INCLUDEPATH += /Library/Frameworks/SDL.framework/Headers
-    INCLUDEPATH += /Library/Frameworks/SDL_mixer.framework/Headers
+    INCLUDEPATH += /opt/local/include/SDL
 }
 OTHER_FILES += docs/infomessage-id-desc.txt
 official_server { 

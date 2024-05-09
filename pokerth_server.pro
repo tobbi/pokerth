@@ -312,13 +312,14 @@ mac {
 	CONFIG -= ppc
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
 	QMAKE_CXXFLAGS -= -std=gnu++0x
+	QMAKE_CXXFLAGS += -std=c++17
 
 	# workaround for problems with boost_filesystem exceptions
 	QMAKE_LFLAGS += -no_dead_strip_inits_and_terms
 
 	# for universal-compilation on PPC-Mac uncomment the following line
 	# on Intel-Mac you have to comment this line out or build will fail.
-	#       QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk/
+	#       QMAKE_MAC_SDK=/Library/Developer/CommandLineTools/SDKs/MacOSX10.4u.sdk/
 
 	LIBPATH += lib
 	# make sure you have an x86_64 version of boost
@@ -337,8 +338,8 @@ mac {
 	LIBS += -lcrypto -lssl -lz -liconv
 	# set the application icon
 	RC_FILE = pokerth.icns
-	LIBPATH += /Developer/SDKs/MacOSX10.6.sdk/usr/lib
-	INCLUDEPATH += /Developer/SDKs/MacOSX10.6.sdk/usr/include/
+	LIBPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/lib
+	INCLUDEPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/
 	INCLUDEPATH += /usr/local/include
 }
 

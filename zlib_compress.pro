@@ -102,7 +102,7 @@ mac{
 
 	# for universal-compilation on PPC-Mac uncomment the following line
 	# on Intel-Mac you have to comment this line out or build will fail.
-	#       QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk/
+	#       QMAKE_MAC_SDK=/Library/Developer/CommandLineTools/SDKs/MacOSX10.4u.sdk/
 
 	# standard path for darwinports
 	# make sure you have a universal version of boost
@@ -110,6 +110,6 @@ mac{
 	LIBS += /usr/local/lib/libboost_system-mt-1_35.a
 	LIBS += /usr/local/lib/libboost_iostreams-mt-1_35.a
 	# libraries installed on every mac
-	LIBPATH += /Developer/SDKs/MacOSX10.4u.sdk/usr/lib
-	INCLUDEPATH += /Developer/SDKs/MacOSX10.4u.sdk/usr/include/
+	LIBPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.4u.sdk/usr/lib
+	INCLUDEPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.4u.sdk/usr/include/
 }

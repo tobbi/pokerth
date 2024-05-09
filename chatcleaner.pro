@@ -56,9 +56,10 @@ mac {
 	CONFIG += x86_64
 	CONFIG -= x86
 	CONFIG -= ppc
-	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
+	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
 	QMAKE_CXXFLAGS -= -std=gnu++0x
-	LIBPATH += /Developer/SDKs/MacOSX10.5.sdk/usr/lib
-	INCLUDEPATH += /Developer/SDKs/MacOSX10.6.sdk/usr/include/
+	QMAKE_CXXFLAGS += -std=c++17
+	LIBPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/lib
+	INCLUDEPATH += /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/
 	INCLUDEPATH += /usr/local/include
 }
