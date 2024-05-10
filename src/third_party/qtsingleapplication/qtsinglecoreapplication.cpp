@@ -56,7 +56,7 @@ bool QtSingleCoreApplication::isRunning()
 
 bool QtSingleCoreApplication::sendMessage(const QString &message, int timeout)
 {
-    return peer->sendMessage(message, timeout);
+    return peer->sendMessage(message, timeout, false);
 }
 
 
