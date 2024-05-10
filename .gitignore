@@ -22,3 +22,5 @@ gitpush_serverstuff_stable
 .classpath
 docs/linux_build_scripts/
 .DS_Store
+
+CMakeFiles/
