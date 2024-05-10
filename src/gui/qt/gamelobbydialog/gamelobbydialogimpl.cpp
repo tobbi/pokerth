@@ -138,7 +138,7 @@ gameLobbyDialogImpl::gameLobbyDialogImpl(startWindowImpl *parent, ConfigFile *c)
 	treeView_GameList->setColumnWidth(4,20);
 	treeView_GameList->setColumnWidth(5,75);
 
-	treeView_GameList->setStyleSheet("QTreeView {background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 22px}");
+	treeView_GameList->setStyleSheet("QTreeView {background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 22px}");
 	treeView_GameList->header()->setStyleSheet("QObject {font: bold 18px}");
 
 	//make the scrollbars touchable for mobile guis
@@ -167,7 +167,7 @@ gameLobbyDialogImpl::gameLobbyDialogImpl(startWindowImpl *parent, ConfigFile *c)
 	treeView_GameList->setColumnWidth(4,25);
 	treeView_GameList->setColumnWidth(5,30);
 
-	treeView_GameList->setStyleSheet("QTreeView {background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
+	treeView_GameList->setStyleSheet("QTreeView {background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
 #endif
 	treeView_GameList->setAutoFillBackground(true);
 
@@ -1585,13 +1585,13 @@ void gameLobbyDialogImpl::changeGameListFilter(int index)
 	writeDialogSettings(1);
 
 #ifdef GUI_800x480
-	if(index) treeView_GameList->setStyleSheet("QTreeView { border-radius: 4px; border: 2px solid blue; background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 20px}");
-	else treeView_GameList->setStyleSheet("QTreeView { background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 20px}");
+	if(index) treeView_GameList->setStyleSheet("QTreeView { border-radius: 4px; border: 2px solid blue; background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 20px}");
+	else treeView_GameList->setStyleSheet("QTreeView { background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat; color:rgb(0, 0, 0); font: 20px}");
 
 	treeView_GameList->header()->setStyleSheet("QObject {font: bold 18px}");
 #else
-	if(index) treeView_GameList->setStyleSheet("QTreeView { border-radius: 4px; border: 2px solid blue; background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
-	else treeView_GameList->setStyleSheet("QTreeView { background-color: white; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
+	if(index) treeView_GameList->setStyleSheet("QTreeView { border-radius: 4px; border: 2px solid blue; background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
+	else treeView_GameList->setStyleSheet("QTreeView { background-color: #505050; background-image: url(\""+myAppDataPath +"gfx/gui/misc/background_gamelist.png\"); background-attachment: fixed; background-position: top center ; background-repeat: no-repeat;}");
 #endif
 }
 
