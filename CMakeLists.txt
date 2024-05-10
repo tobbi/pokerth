@@ -231,7 +231,14 @@ if(BUILD_CLIENT)
         src/gui/qt/mymessagebox/mymessagebox.cpp 
         src/gui/qt/logfiledialog/logfiledialog.cpp)
 
-    file(GLOB QTSINGLEAPPLICATION_SRC src/third_party/qtsingleapplication/*.cpp)
+    file(GLOB QTSINGLEAPPLICATION_SRC src/third_party/qtsingleapplication/*.cpp src/third_party/qtlockedfile/qtlockedfile.cpp)
+
+    if(UNIX)
+        set(QTSINGLEAPPLICATION_SRC "${QTSINGLEAPPLICATION_SRC};src/third_party/qtlockedfile/qtlockedfile_unix.cpp")
+    elseif(WIN32)
+        set(QTSINGLEAPPLICATION_SRC "${QTSINGLEAPPLICATION_SRC};src/third_party/qtlockedfile/qtlockedfile_win.cpp")
+    endif()
+
     add_executable(pokerth_client "${POKERTH_CLIENT_SRC}" "${QTSINGLEAPPLICATION_SRC}")
     target_include_directories(pokerth_client PUBLIC src/third_party/qtsingleapplication src/third_party/qtlockedfile)
 
