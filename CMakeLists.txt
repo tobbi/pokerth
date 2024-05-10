@@ -5,14 +5,20 @@ project(POKERTH)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/mk/cmake)
 
 set(BUILD_DBOFFICIAL OFF)
+set(BUILD_CLIENT ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FindBoost)
+include(FindGsasl)
+include(FindTinyXML)
 
-find_package(Boost)
+find_package(Boost REQUIRED COMPONENTS iostreams thread)
+find_package(gsasl)
+find_package(SQLite3 REQUIRED)
+find_package(TinyXML REQUIRED)
 
 # POKERTH.lib
 
@@ -97,6 +103,11 @@ file(GLOB POKERTH_LIB_SRC
 
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
 
+target_link_libraries(pokerth_lib PRIVATE "${MYSQLPP_LIBRARIES}")
+target_link_libraries(pokerth_lib PRIVATE "${GSASL_LIBRARIES}")
+target_link_libraries(pokerth_lib PRIVATE "${Boost_LIBRARIES}")
+target_link_libraries(pokerth_lib PRIVATE "${SQLite3_LIBRARIES}")
+
 target_include_directories(pokerth_lib PRIVATE "${Boost_INCLUDE_DIRS}")
 
 target_compile_definitions(pokerth_lib PUBLIC ENABLE_IPV6 TIXML_USE_STL BOOST_FILESYSTEM_DEPRECATED)
@@ -121,4 +132,131 @@ if(BUILD_DBOFFICIAL)
     endif()
     target_include_directories(pokerth_dbofficial PRIVATE "${Boost_INCLUDE_DIRS}")
     target_include_directories(pokerth_dbofficial PUBLIC src)
+endif()
+
+if(BUILD_CLIENT)
+    find_package(Qt5 REQUIRED COMPONENTS Sql Gui Widgets REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    find_package(CURL REQUIRED)
+
+    add_library(LibCurl INTERFACE IMPORTED)
+    set_target_properties(LibCurl PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIRS}")
+    if(WIN32)
+      target_link_libraries(LibCurl INTERFACE ${CURL_LIBRARY})
+    else()
+      set_target_properties(LibCurl PROPERTIES
+        INTERFACE_LINK_LIBRARIES "${CURL_LIBRARY}")
+    endif()
+
+    file(GLOB POKERTH_CLIENT_SRC src/pokerth.cpp 
+        src/gui/qt/chattools/chattools.cpp 
+        src/gui/qt/guiwrapper.cpp 
+        src/gui/qt/qttools/qttoolswrapper.cpp 
+        src/gui/qt/qttools/qthelper/qthelper.cpp 
+        src/gui/qt/gametable/gametableimpl.cpp 
+        src/gui/qt/gametable/mycardspixmaplabel.cpp 
+        src/gui/qt/gametable/mysetlabel.cpp 
+        src/gui/qt/gametable/myactionbutton.cpp 
+        src/gui/qt/gametable/mystatuslabel.cpp 
+        src/gui/qt/gametable/myavatarlabel.cpp 
+        src/gui/qt/gametable/myrighttabwidget.cpp 
+        src/gui/qt/gametable/mylefttabwidget.cpp 
+        src/gui/qt/gametable/startsplash/startsplash.cpp 
+        src/gui/qt/gametable/log/guilog.cpp 
+        src/gui/qt/aboutpokerth/aboutpokerthimpl.cpp 
+        src/gui/qt/connecttoserverdialog/connecttoserverdialogimpl.cpp 
+        src/gui/qt/createnetworkgamedialog/createnetworkgamedialogimpl.cpp 
+        src/gui/qt/createinternetgamedialog/createinternetgamedialogimpl.cpp 
+        src/gui/qt/joinnetworkgamedialog/joinnetworkgamedialogimpl.cpp 
+        src/gui/qt/newlocalgamedialog/newgamedialogimpl.cpp 
+        src/gui/qt/settingsdialog/settingsdialogimpl.cpp 
+        src/gui/qt/settingsdialog/myavatarbutton.cpp 
+        src/gui/qt/settingsdialog/myhpavatarbutton.cpp 
+        src/gui/qt/settingsdialog/selectavatardialog/selectavatardialogimpl.cpp 
+        src/gui/qt/settingsdialog/selectavatardialog/myavatarlistitem.cpp 
+        src/gui/qt/settingsdialog/manualblindsorderdialog/manualblindsorderdialogimpl.cpp 
+        src/gui/qt/startnetworkgamedialog/startnetworkgamedialogimpl.cpp 
+        src/gui/qt/startwindow/startwindowimpl.cpp 
+        src/gui/qt/styles/gametablestylereader.cpp 
+        src/gui/qt/styles/carddeckstylereader.cpp 
+        src/gui/qt/changecontentdialog/changecontentdialogimpl.cpp 
+        src/gui/qt/changecompleteblindsdialog/changecompleteblindsdialogimpl.cpp 
+        src/gui/qt/mymessagedialog/mymessagedialogimpl.cpp 
+        src/gui/qt/gamelobbydialog/gamelobbydialogimpl.cpp 
+        src/gui/qt/gamelobbydialog/mygamelisttreewidget.cpp 
+        src/gui/qt/timeoutmsgbox/timeoutmsgboximpl.cpp 
+        src/net/common/net_helper_client.cpp 
+        src/core/common/loghelper_client.cpp 
+        src/gui/qt/gametable/mychancelabel.cpp 
+        src/gui/qt/serverlistdialog/serverlistdialogimpl.cpp 
+        src/gui/qt/gametable/mytimeoutlabel.cpp 
+        src/gui/qt/gametable/mynamelabel.cpp 
+        src/gui/qt/settingsdialog/mystylelistitem.cpp 
+        src/gui/qt/gamelobbydialog/mygamelistsortfilterproxymodel.cpp 
+        src/gui/qt/internetgamelogindialog/internetgamelogindialogimpl.cpp 
+        src/engine/local_engine/replay.cpp 
+        src/gui/qt/gamelobbydialog/mynicklistsortfilterproxymodel.cpp 
+        src/net/common/servermanagerfactoryclient.cpp 
+        src/gui/qt/gametable/mycashlabel.cpp 
+        src/gui/qt/sound/soundevents.cpp 
+        src/gui/qt/mymessagebox/mymessagebox.cpp 
+        src/gui/qt/logfiledialog/logfiledialog.cpp)
+    add_executable(pokerth_client "${POKERTH_CLIENT_SRC}")
+
+    target_include_directories(pokerth_client PRIVATE "${Qt5Sql_INCLUDE_DIRS}")
+    target_include_directories(pokerth_client PRIVATE "${Qt5Gui_INCLUDE_DIRS}")
+    target_include_directories(pokerth_client PRIVATE "${Qt5Widgets_INCLUDE_DIRS}")
+    target_include_directories(pokerth_client PRIVATE "${Boost_INCLUDE_DIRS}")
+    target_include_directories(pokerth_client PRIVATE "${SDLMIXER_INCLUDE_DIR}")
+
+    target_link_libraries(pokerth_client PRIVATE "${Qt5Sql_LIBRARIES}")
+    target_link_libraries(pokerth_client PRIVATE "${Qt5Gui_LIBRARIES}")
+    target_link_libraries(pokerth_client PRIVATE "${Qt5Widgets_LIBRARIES}")
+    target_link_libraries(pokerth_client PRIVATE pokerth_lib)
+    target_link_libraries(pokerth_client PRIVATE LibCurl)
+    target_link_libraries(pokerth_lib PRIVATE "${BOOST_LIBRARIES}")
+    target_link_libraries(pokerth_lib PRIVATE "${SDLMIXER_LIBRARIES}")
+    target_link_libraries(pokerth_lib PRIVATE "${TinyXML_LIBRARIES}")
+
+    target_include_directories(pokerth_client PUBLIC "uics/")
+
+    target_include_directories(pokerth_client PUBLIC
+        src 
+        src/engine 
+        src/gui 
+        src/net 
+        src/engine/local_engine 
+        src/engine/network_engine 
+        src/config 
+        src/gui/qt 
+        src/gui/qt/connecttoserverdialog 
+        src/core 
+        src/gui/qt/sound 
+        src/gui/qt/qttools 
+        src/gui/qt/chattools 
+        src/gui/qt/qttools/qthelper 
+        src/gui/qt/gametable 
+        src/gui/qt/gametable/startsplash 
+        src/gui/qt/gametable/log 
+        src/gui/qt/aboutpokerth 
+        src/gui/qt/createnetworkgamedialog 
+        src/gui/qt/createinternetgamedialog 
+        src/gui/qt/joinnetworkgamedialog 
+        src/gui/qt/newlocalgamedialog 
+        src/gui/qt/settingsdialog 
+        src/gui/qt/settingsdialog/selectavatardialog 
+        src/gui/qt/settingsdialog/manualblindsorderdialog 
+        src/gui/qt/startnetworkgamedialog 
+        src/gui/qt/startwindow 
+        src/gui/qt/serverlistdialog 
+        src/gui/qt/styles 
+        src/gui/qt/changecontentdialog 
+        src/gui/qt/changecompleteblindsdialog 
+        src/gui/qt/internetgamelogindialog 
+        src/gui/qt/mymessagedialog 
+        src/gui/qt/gamelobbydialog 
+        src/gui/qt/timeoutmsgbox 
+        src/gui/qt/logfiledialog 
+        src/gui/qt/mymessagebox/)
 endif()
