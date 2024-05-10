@@ -106,6 +106,12 @@ file(GLOB POKERTH_LIB_SRC
     src/net/common/webreceivebuffer.cpp 
     src/net/common/uploadcallback.cpp)
 
+if(ANDROID)
+    set(POKERTH_LIB_SRC "${POKERTH_LIB_SRC};src/engine/local_engine/tools_android.cpp")
+else()
+    set(POKERTH_LIB_SRC "${POKERTH_LIB_SRC};src/engine/local_engine/tools.cpp")
+endif()
+
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
 
 target_link_libraries(pokerth_lib PUBLIC "${SQLite3_LIBRARIES}")
