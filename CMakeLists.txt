@@ -10,7 +10,9 @@ set(BUILD_CLIENT ON)
 set(BUILD_PROTOCOL ON)
 set(GUI_800_480 OFF)
 
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC OFF)
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_AUTOUIC_SEARCH_PATHS};uics/;src/gui/qt;")
 
 if(GUI_800_480)
@@ -18,7 +20,6 @@ if(GUI_800_480)
     set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_AUTOUIC_SEARCH_PATHS};src/gui/qt/gui_800x480;")
 endif()
 
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -246,6 +247,12 @@ if(BUILD_CLIENT)
         src/gui/qt/sound/sdlplayer.cpp
         src/gui/qt/mymessagebox/mymessagebox.cpp 
         src/gui/qt/logfiledialog/logfiledialog.cpp)
+
+    if(ANDROID)
+        set(POKERTH_CLIENT_SRC "${POKERTH_CLIENT_SRC};src/gui/qt/resources/pokerth_android.qrc")
+    else()
+        set(POKERTH_CLIENT_SRC "${POKERTH_CLIENT_SRC};src/gui/qt/resources/pokerth.qrc")
+    endif()
 
     file(GLOB QTSINGLEAPPLICATION_SRC src/third_party/qtsingleapplication/*.cpp src/third_party/qtlockedfile/qtlockedfile.cpp)
 
