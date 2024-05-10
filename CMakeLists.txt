@@ -4,8 +4,10 @@ project(POKERTH)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/mk/cmake)
 
+set(BUILD_DB ON)
 set(BUILD_DBOFFICIAL OFF)
 set(BUILD_CLIENT ON)
+set(BUILD_PROTOCOL ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,10 +17,12 @@ include(FindBoost)
 include(FindGsasl)
 include(FindTinyXML)
 
-find_package(Boost REQUIRED COMPONENTS iostreams thread)
+find_package(Boost REQUIRED COMPONENTS iostreams thread filesystem)
 find_package(gsasl)
 find_package(SQLite3 REQUIRED)
 find_package(TinyXML REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(absl REQUIRED CONFIG)
 
 # POKERTH.lib
 
@@ -103,10 +107,13 @@ file(GLOB POKERTH_LIB_SRC
 
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
 
-target_link_libraries(pokerth_lib PRIVATE "${MYSQLPP_LIBRARIES}")
-target_link_libraries(pokerth_lib PRIVATE "${GSASL_LIBRARIES}")
-target_link_libraries(pokerth_lib PRIVATE "${Boost_LIBRARIES}")
-target_link_libraries(pokerth_lib PRIVATE "${SQLite3_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${SQLite3_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${MYSQLPP_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${GSASL_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${Boost_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${SDLMIXER_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${TinyXML_LIBRARIES}")
+target_link_libraries(pokerth_lib PUBLIC "${OPENSSL_LIBRARIES}")
 
 target_include_directories(pokerth_lib PRIVATE "${Boost_INCLUDE_DIRS}")
 
@@ -115,7 +122,7 @@ target_compile_definitions(pokerth_lib PUBLIC ENABLE_IPV6 TIXML_USE_STL BOOST_FI
 target_include_directories(pokerth_lib PUBLIC
     src
     src/engine src/engine/local_engine src/engine/network_engine
-    src/gui src/gui/qt src/gui/qt/qttools
+    src/gui src/gui/qt src/gui/qt/qttools src/gui/qt/gametable
     src/net
     src/config
     src/core
@@ -134,8 +141,27 @@ if(BUILD_DBOFFICIAL)
     target_include_directories(pokerth_dbofficial PUBLIC src)
 endif()
 
+if(BUILD_DB)
+    file(GLOB POKERTH_DB_SRC src/db/common/*.cpp)
+    add_library(pokerth_db "${POKERTH_DB_SRC}")
+    target_include_directories(pokerth_db PRIVATE "${Boost_INCLUDE_DIRS}")
+    target_include_directories(pokerth_db PUBLIC src/)
+endif()
+
+if(BUILD_PROTOCOL)
+    find_package(Protobuf REQUIRED)
+    add_library(pokerth_protocol "src/third_party/protobuf/chatcleaner.pb.cc" "src/third_party/protobuf/pokerth.pb.cc")
+    target_include_directories(pokerth_protocol PRIVATE "${Protobuf_INCLUDE_DIR}")
+    target_include_directories(pokerth_protocol PUBLIC "src/third_party/protobuf")
+    target_link_libraries(pokerth_protocol PUBLIC 
+        "${Protobuf_LIBRARIES}"
+        absl::log_internal_message
+        absl::log_internal_check_op)
+endif()
+
 if(BUILD_CLIENT)
-    find_package(Qt5 REQUIRED COMPONENTS Sql Gui Widgets REQUIRED)
+    find_package(Qt5 REQUIRED COMPONENTS Sql Gui Widgets Network REQUIRED)
+    find_package(SDL REQUIRED)
     find_package(SDL_mixer REQUIRED)
     find_package(CURL REQUIRED)
 
@@ -200,24 +226,30 @@ if(BUILD_CLIENT)
         src/net/common/servermanagerfactoryclient.cpp 
         src/gui/qt/gametable/mycashlabel.cpp 
         src/gui/qt/sound/soundevents.cpp 
+        src/gui/qt/sound/sdlplayer.cpp
         src/gui/qt/mymessagebox/mymessagebox.cpp 
         src/gui/qt/logfiledialog/logfiledialog.cpp)
-    add_executable(pokerth_client "${POKERTH_CLIENT_SRC}")
+
+    file(GLOB QTSINGLEAPPLICATION_SRC src/third_party/qtsingleapplication/*.cpp)
+    add_executable(pokerth_client "${POKERTH_CLIENT_SRC}" "${QTSINGLEAPPLICATION_SRC}")
+    target_include_directories(pokerth_client PUBLIC src/third_party/qtsingleapplication src/third_party/qtlockedfile)
 
     target_include_directories(pokerth_client PRIVATE "${Qt5Sql_INCLUDE_DIRS}")
     target_include_directories(pokerth_client PRIVATE "${Qt5Gui_INCLUDE_DIRS}")
     target_include_directories(pokerth_client PRIVATE "${Qt5Widgets_INCLUDE_DIRS}")
     target_include_directories(pokerth_client PRIVATE "${Boost_INCLUDE_DIRS}")
-    target_include_directories(pokerth_client PRIVATE "${SDLMIXER_INCLUDE_DIR}")
+    target_include_directories(pokerth_client PRIVATE "${SDL_MIXER_INCLUDE_DIRS}")
 
-    target_link_libraries(pokerth_client PRIVATE "${Qt5Sql_LIBRARIES}")
-    target_link_libraries(pokerth_client PRIVATE "${Qt5Gui_LIBRARIES}")
-    target_link_libraries(pokerth_client PRIVATE "${Qt5Widgets_LIBRARIES}")
-    target_link_libraries(pokerth_client PRIVATE pokerth_lib)
-    target_link_libraries(pokerth_client PRIVATE LibCurl)
-    target_link_libraries(pokerth_lib PRIVATE "${BOOST_LIBRARIES}")
-    target_link_libraries(pokerth_lib PRIVATE "${SDLMIXER_LIBRARIES}")
-    target_link_libraries(pokerth_lib PRIVATE "${TinyXML_LIBRARIES}")
+    target_link_libraries(pokerth_client PUBLIC "${Qt5Sql_LIBRARIES}")
+    target_link_libraries(pokerth_client PUBLIC "${Qt5Gui_LIBRARIES}")
+    target_link_libraries(pokerth_client PUBLIC "${Qt5Widgets_LIBRARIES}")
+    target_link_libraries(pokerth_client PUBLIC "${Qt5Network_LIBRARIES}")
+    target_link_libraries(pokerth_client PUBLIC LibCurl)
+    target_link_libraries(pokerth_client PUBLIC "${SDL_LIBRARIES}" "${SDL_MIXER_LIBRARIES}")
+
+    target_link_libraries(pokerth_client PUBLIC pokerth_lib)
+    target_link_libraries(pokerth_client PUBLIC pokerth_db)
+    target_link_libraries(pokerth_client PUBLIC pokerth_protocol)
 
     target_include_directories(pokerth_client PUBLIC "uics/")
 
