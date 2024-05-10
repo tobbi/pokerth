@@ -476,6 +476,7 @@ gameTableImpl::gameTableImpl(ConfigFile *c, QMainWindow *parent)
 
 	//fix for away string bug in righttabwidget on windows
 #if (defined _WIN32) || (defined __APPLE__)
+#ifndef GUI_800x480
 	tabWidget_Right->setTabText(0, " "+tabWidget_Right->tabText(0)+" ");
 	tabWidget_Right->setTabText(1, " "+tabWidget_Right->tabText(1)+" ");
 	tabWidget_Right->setTabText(2, " "+tabWidget_Right->tabText(2)+" ");
@@ -483,7 +484,7 @@ gameTableImpl::gameTableImpl(ConfigFile *c, QMainWindow *parent)
 	tabWidget_Left->setTabText(1, " "+tabWidget_Left->tabText(1)+" ");
 	tabWidget_Left->setTabText(2, " "+tabWidget_Left->tabText(2)+" ");
 	tabWidget_Left->setTabText(3, " "+tabWidget_Left->tabText(3)+" ");
-
+#endif
 #endif
 
 	//resize stop-button depending on translation
