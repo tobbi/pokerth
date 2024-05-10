@@ -2,10 +2,19 @@ cmake_minimum_required(VERSION 3.5)
 
 project(POKERTH)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/mk/cmake)
+
+set(BUILD_DBOFFICIAL OFF)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+include(FindBoost)
+
+find_package(Boost)
+
+# POKERTH.lib
 
 file(GLOB POKERTH_LIB_SRC 
     src/engine/game.cpp 
@@ -86,10 +95,6 @@ file(GLOB POKERTH_LIB_SRC
     src/net/common/webreceivebuffer.cpp 
     src/net/common/uploadcallback.cpp)
 
-include(FindBoost)
-
-find_package(Boost)
-
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
 
 target_include_directories(pokerth_lib PRIVATE "${Boost_INCLUDE_DIRS}")
@@ -104,3 +109,16 @@ target_include_directories(pokerth_lib PUBLIC
     src/config
     src/core
     src/third_party/websocketpp)
+
+if(BUILD_DBOFFICIAL)
+    file(GLOB POKERTH_DBOFFICIAL_SRC src/dbofficial/*.cpp)
+
+    add_library(pokerth_dbofficial "${POKERTH_DBOFFICIAL_SRC}")
+    include(Findmysqlpp)
+    find_package(MYSQLPP)
+    if(NOT MYSQLPP_FOUND)
+        message(FATAL_ERROR "Could not build PokerTH::DBOfficial MySQL++ was not found.")
+    endif()
+    target_include_directories(pokerth_dbofficial PRIVATE "${Boost_INCLUDE_DIRS}")
+    target_include_directories(pokerth_dbofficial PUBLIC src)
+endif()
