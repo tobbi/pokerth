@@ -63,7 +63,7 @@ gameLobbyDialogImpl::gameLobbyDialogImpl(startWindowImpl *parent, ConfigFile *c)
 	waitStartGameMsgBox = new MyMessageBox(this);
 	waitStartGameMsgBox->setText(tr("Starting game. Please wait ..."));
 #ifndef ANDROID
-	waitStartGameMsgBox->setWindowModality(Qt::NonModal);
+	waitStartGameMsgBox->setWindowModality(Qt::WindowModal);
 #endif
 	waitStartGameMsgBox->setStandardButtons(QMessageBox::NoButton);
 
@@ -71,7 +71,7 @@ gameLobbyDialogImpl::gameLobbyDialogImpl(startWindowImpl *parent, ConfigFile *c)
 	waitRejoinStartGameMsgBox = new MyMessageBox(this);
 	waitRejoinStartGameMsgBox->setText(tr("Waiting for the start of the next hand to rejoin the game ..."));
 #ifndef ANDROID
-	waitRejoinStartGameMsgBox->setWindowModality(Qt::NonModal);
+	waitRejoinStartGameMsgBox->setWindowModality(Qt::WindowModal);
 #endif
 	waitRejoinStartGameMsgBox->setStandardButtons(QMessageBox::NoButton);
 
