@@ -47,15 +47,9 @@ class Slider : public QSlider
 	Q_OBJECT
 
 public:
-	Slider( QWidget* parent = 0 )
-		: QSlider( parent )
-	{
-	}
+	Slider( QWidget*);
 
-	Slider( Qt::Orientation orientation, QWidget* parent = 0 )
-		: QSlider( orientation, parent )
-	{
-	}
+	Slider( Qt::Orientation, QWidget*);
 
 protected:
 	int pixelPosToRangeValue(int pos) const   // getted from QSlider.cpp with little adapt

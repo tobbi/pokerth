@@ -201,6 +201,7 @@ if(BUILD_CLIENT)
         src/gui/qt/gametable/mysetlabel.cpp 
         src/gui/qt/gametable/myactionbutton.cpp 
         src/gui/qt/gametable/mystatuslabel.cpp 
+        src/gui/qt/gametable/myslider.cpp 
         src/gui/qt/gametable/myavatarlabel.cpp 
         src/gui/qt/gametable/myrighttabwidget.cpp 
         src/gui/qt/gametable/mylefttabwidget.cpp 
