@@ -81,9 +81,9 @@ AsioSendBuffer::AsyncSendNextPacket(boost::shared_ptr<boost::asio::ip::tcp::sock
 {
 	if (!curWriteBufUsed) {
 		// Swap buffers and send data.
-		boost::swap(curWriteBuf, sendBuf);
-		boost::swap(curWriteBufAllocated, sendBufAllocated);
-		boost::swap(curWriteBufUsed, sendBufUsed);
+		boost::core::invoke_swap(curWriteBuf, sendBuf);
+		boost::core::invoke_swap(curWriteBufAllocated, sendBufAllocated);
+		boost::core::invoke_swap(curWriteBufUsed, sendBufUsed);
 		if (curWriteBufUsed) {
 			boost::asio::async_write(
 				*socket,
