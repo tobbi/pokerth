@@ -187,6 +187,8 @@ public:
 		}
 	};
 
+	void addTableStyleItem(const char* xmlPath);
+
 	bool playerNickIsChanged;
 	bool settingsCorrect;
 
