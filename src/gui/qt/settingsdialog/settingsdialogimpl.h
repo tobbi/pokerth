@@ -95,7 +95,7 @@ public slots:
 	};
 	void setFlipsidePicFileName();
 	void setLogDir();
-	void setAvatarFile0();
+	void setHumanPlayerAvatarFile();
 
 	void callManualBlindsOrderDialog();
 	void callNetManualBlindsOrderDialog();
