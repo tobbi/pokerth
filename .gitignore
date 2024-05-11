@@ -25,3 +25,6 @@ docs/linux_build_scripts/
 
 CMakeFiles/
 pokerth_*_autogen
+
+# MacOS application file
+pokerth.app/
