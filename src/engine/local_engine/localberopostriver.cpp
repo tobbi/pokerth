@@ -51,12 +51,14 @@ void LocalBeRoPostRiver::run()
 
 void LocalBeRoPostRiver::postRiverRun()
 {
+	auto activePlayers = getMyHand()->getActivePlayerList();
+	auto log = getMyHand()->getLog();
 
 	PlayerListConstIterator it_c;
 	PlayerListIterator it;
 
 	// who is the winner
-	for(it_c=getMyHand()->getActivePlayerList()->begin(); it_c!=getMyHand()->getActivePlayerList()->end(); ++it_c) {
+	for(it_c = activePlayers->begin(); it_c != activePlayers->end(); ++it_c) {
 
 		if( (*it_c)->getMyAction() != PLAYER_ACTION_FOLD && (*it_c)->getMyCardsValueInt() > highestCardsValue ) {
 			highestCardsValue = (*it_c)->getMyCardsValueInt();
@@ -65,7 +67,7 @@ void LocalBeRoPostRiver::postRiverRun()
 
 	int potPlayers = 0;
 
-	for(it_c=getMyHand()->getActivePlayerList()->begin(); it_c!=getMyHand()->getActivePlayerList()->end(); ++it_c) {
+	for(it_c = activePlayers->begin(); it_c != activePlayers->end(); ++it_c) {
 		if( (*it_c)->getMyAction() != PLAYER_ACTION_FOLD) {
 			potPlayers++;
 		}
@@ -73,7 +75,7 @@ void LocalBeRoPostRiver::postRiverRun()
 
 	// prüfen ob nur noch human player an der verteilung teilnimmt und myAggressive für human player setzen
 	if(potPlayers == 1) {
-		for(it=getMyHand()->getActivePlayerList()->begin(); it!=getMyHand()->getActivePlayerList()->end(); ++it) {
+		for(it = activePlayers->begin(); it != activePlayers->end(); ++it) {
 			if( (*it)->getMyAction() != PLAYER_ACTION_FOLD) {
 				(*it)->setMyAggressive(true);
 			}
@@ -98,17 +100,17 @@ void LocalBeRoPostRiver::postRiverRun()
 
 	// logging
 	int nonfoldPlayersCounter = 0;
-	for (it_c=getMyHand()->getActivePlayerList()->begin(); it_c!=getMyHand()->getActivePlayerList()->end(); ++it_c) {
+	for (it_c = activePlayers->begin(); it_c != activePlayers->end(); ++it_c) {
 		if ((*it_c)->getMyAction() != PLAYER_ACTION_FOLD) nonfoldPlayersCounter++;
 	}
-	if(nonfoldPlayersCounter>1) {
-		if(getMyHand()->getLog()) getMyHand()->getLog()->logHoleCardsHandName(getMyHand()->getActivePlayerList());
+	if(nonfoldPlayersCounter > 1) {
+		if(log) log->logHoleCardsHandName(activePlayers);
 	}
-	if(getMyHand()->getLog()) {
-		getMyHand()->getLog()->logHandWinner(getMyHand()->getActivePlayerList(), highestCardsValue, getMyHand()->getBoard()->getWinners());
-		getMyHand()->getLog()->logPlayerSitsOut(getMyHand()->getActivePlayerList());
-		getMyHand()->getLog()->logGameWinner(getMyHand()->getActivePlayerList());
-		getMyHand()->getLog()->logAfterHand();
+	if(log) {
+		log->logHandWinner(activePlayers, highestCardsValue, getMyHand()->getBoard()->getWinners());
+		log->logPlayerSitsOut(activePlayers);
+		log->logGameWinner(activePlayers);
+		log->logAfterHand();
 	}
 
 	//starte die Animaionsreihe
