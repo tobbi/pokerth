@@ -181,8 +181,8 @@ public:
 		}
 	};
 
-	void addTableStyleItem(const char* xmlPath, bool isAdditionalStyle = false);
-	void addCardStyleItem(const char* xmlPath, bool isAdditionalStyle = false);
+	void addTableStyleItem(const QString& xmlPath, bool isAdditionalStyle = false);
+	void addCardStyleItem(const QString& xmlPath, bool isAdditionalStyle = false);
 
 	bool playerNickIsChanged;
 	bool settingsCorrect;

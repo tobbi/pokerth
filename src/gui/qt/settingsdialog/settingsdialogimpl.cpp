@@ -1027,7 +1027,7 @@ void settingsDialogImpl::setSelectedGameTableStyleActivated()
 	}
 }
 
-void settingsDialogImpl::addTableStyleItem(const char* xmlPath, bool isAdditionalStyle)
+void settingsDialogImpl::addTableStyleItem(const QString& xmlPath, bool isAdditionalStyle)
 {
 	GameTableStyleReader tableStyle(myConfig, this);
 	QString appDataDir = QString::fromUtf8(myConfig->readConfigString("AppDataDir").c_str());
@@ -1054,7 +1054,7 @@ void settingsDialogImpl::addTableStyleItem(const char* xmlPath, bool isAdditiona
 		tableItem->setIcon(2, QIcon(":/gfx/dialog_ok_apply.png"));
 }
 
-void settingsDialogImpl::addCardStyleItem(const char* xmlPath, bool isAdditionalStyle)
+void settingsDialogImpl::addCardStyleItem(const QString& xmlPath, bool isAdditionalStyle)
 {
 	// TODO: This is very similar to the `addTableStyleItem` method
 	// but due to `GameTableStyleReader` and `CardDeckStyleReader`
