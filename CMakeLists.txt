@@ -36,7 +36,7 @@ find_package(absl REQUIRED CONFIG)
 
 # POKERTH.lib
 
-file(GLOB POKERTH_LIB_SRC 
+set(POKERTH_LIB_SRC 
     src/engine/game.cpp 
     src/session.cpp 
     src/playerdata.cpp 
@@ -116,9 +116,9 @@ file(GLOB POKERTH_LIB_SRC
     src/net/common/uploadcallback.cpp)
 
 if(ANDROID)
-    set(POKERTH_LIB_SRC "${POKERTH_LIB_SRC};src/engine/local_engine/tools_android.cpp")
+    list(APPEND POKERTH_LIB_SRC "src/engine/local_engine/tools_android.cpp")
 else()
-    set(POKERTH_LIB_SRC "${POKERTH_LIB_SRC};src/engine/local_engine/tools.cpp")
+    list(APPEND POKERTH_LIB_SRC "src/engine/local_engine/tools.cpp")
 endif()
 
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
@@ -191,7 +191,7 @@ if(BUILD_CLIENT)
         INTERFACE_LINK_LIBRARIES "${CURL_LIBRARY}")
     endif()
 
-    file(GLOB POKERTH_CLIENT_SRC src/pokerth.cpp 
+    set(POKERTH_CLIENT_SRC src/pokerth.cpp 
         src/gui/qt/chattools/chattools.cpp 
         src/gui/qt/guiwrapper.cpp 
         src/gui/qt/qttools/qttoolswrapper.cpp 
@@ -246,6 +246,12 @@ if(BUILD_CLIENT)
         src/gui/qt/sound/sdlplayer.cpp
         src/gui/qt/mymessagebox/mymessagebox.cpp 
         src/gui/qt/logfiledialog/logfiledialog.cpp)
+
+    if(ANDROID)
+        list(APPEND POKERTH_CLIENT_SRC "src/gui/qt/resources/pokerth_android.qrc")
+    else()
+        list(APPEND POKERTH_CLIENT_SRC "src/gui/qt/resources/pokerth.qrc")
+    endif()
 
     file(GLOB QTSINGLEAPPLICATION_SRC src/third_party/qtsingleapplication/*.cpp src/third_party/qtlockedfile/qtlockedfile.cpp)
 
