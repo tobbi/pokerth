@@ -31,7 +31,7 @@ include(FindGsasl)
 include(FindTinyXML)
 
 find_package(Boost REQUIRED COMPONENTS iostreams thread filesystem)
-find_package(gsasl)
+find_package(GSASL REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(TinyXML REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -169,7 +169,10 @@ endif()
 
 if(BUILD_PROTOCOL)
     find_package(Protobuf REQUIRED)
-    add_library(pokerth_protocol "src/third_party/protobuf/chatcleaner.pb.cc" "src/third_party/protobuf/pokerth.pb.cc")
+    protobuf_generate_cpp(PROTOBUF_GEN_SRC PROTOBUF_GEN_HDRS
+                          chatcleaner.proto pokerth.proto
+                          PROTOC_OUT_DIR src/third_party/protobuf)
+    add_library(pokerth_protocol "${PROTOBUF_GEN_SRC}")
     target_include_directories(pokerth_protocol PRIVATE "${Protobuf_INCLUDE_DIR}")
     target_include_directories(pokerth_protocol PUBLIC "src/third_party/protobuf")
     target_link_libraries(pokerth_protocol PUBLIC 
