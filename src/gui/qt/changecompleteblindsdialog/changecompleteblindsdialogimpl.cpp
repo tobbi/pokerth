@@ -31,6 +31,7 @@
 #include "changecompleteblindsdialogimpl.h"
 #include "mymessagebox.h"
 #include "configfile.h"
+#include <algorithm>
 #include <iostream>
 
 
@@ -94,7 +95,7 @@ void changeCompleteBlindsDialogImpl::sortBlindsList()
 		tempIntList << listWidget_blinds->item(i)->text().toInt(&ok,10);
 	}
 
-	qStableSort(tempIntList.begin(), tempIntList.end());
+	std::stable_sort(tempIntList.begin(), tempIntList.end());
 //
 	for(i=0; i<tempIntList.count(); i++) {
 //
