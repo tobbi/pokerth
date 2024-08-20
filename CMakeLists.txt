@@ -166,12 +166,12 @@ if(BUILD_DB)
 endif()
 
 if(BUILD_PROTOCOL)
-    find_package(Protobuf REQUIRED)
+    find_package(Protobuf CONFIG REQUIRED)
     add_library(pokerth_protocol "src/third_party/protobuf/chatcleaner.pb.cc" "src/third_party/protobuf/pokerth.pb.cc")
     target_include_directories(pokerth_protocol PRIVATE "${Protobuf_INCLUDE_DIR}")
     target_include_directories(pokerth_protocol PUBLIC "src/third_party/protobuf")
     target_link_libraries(pokerth_protocol PUBLIC 
-        "${Protobuf_LIBRARIES}"
+        protobuf::libprotobuf
         absl::log_internal_message
         absl::log_internal_check_op)
 endif()
