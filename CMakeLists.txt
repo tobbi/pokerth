@@ -10,9 +10,6 @@ set(BUILD_CLIENT ON)
 set(BUILD_PROTOCOL ON)
 set(GUI_800_480 OFF)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC OFF)
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_AUTOUIC_SEARCH_PATHS};uics/;src/gui/qt;")
 
 if(GUI_800_480)
@@ -123,6 +120,9 @@ else()
 endif()
 
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
+set_property(TARGET pokerth_lib PROPERTY AUTOMOC ON)
+set_property(TARGET pokerth_lib PROPERTY AUTORCC ON)
+set_property(TARGET pokerth_lib PROPERTY AUTOUIC ON)
 
 target_link_libraries(pokerth_lib PUBLIC "${SQLite3_LIBRARIES}")
 target_link_libraries(pokerth_lib PUBLIC "${MYSQLPP_LIBRARIES}")
