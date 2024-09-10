@@ -120,9 +120,6 @@ else()
 endif()
 
 add_library(pokerth_lib "${POKERTH_LIB_SRC}")
-set_property(TARGET pokerth_lib PROPERTY AUTOMOC ON)
-set_property(TARGET pokerth_lib PROPERTY AUTORCC ON)
-set_property(TARGET pokerth_lib PROPERTY AUTOUIC ON)
 
 target_link_libraries(pokerth_lib PUBLIC "${SQLite3_LIBRARIES}")
 target_link_libraries(pokerth_lib PUBLIC "${MYSQLPP_LIBRARIES}")
@@ -263,6 +260,10 @@ if(BUILD_CLIENT)
     endif()
 
     add_executable(pokerth_client "${POKERTH_CLIENT_SRC}" "${QTSINGLEAPPLICATION_SRC}")
+    set_property(TARGET pokerth_client PROPERTY AUTOMOC ON)
+    set_property(TARGET pokerth_client PROPERTY AUTORCC ON)
+    set_property(TARGET pokerth_client PROPERTY AUTOUIC OFF)
+    
     target_include_directories(pokerth_client PUBLIC src/third_party/qtsingleapplication src/third_party/qtlockedfile)
 
     target_include_directories(pokerth_client PRIVATE "${Qt5Core_INCLUDE_DIRS}")
