@@ -326,3 +326,5 @@ if(BUILD_CLIENT)
         src/gui/qt/logfiledialog 
         src/gui/qt/mymessagebox/)
 endif()
+
+# TODO: Add copying of imageformats/ directory straight from QT and QT platforms plugin
